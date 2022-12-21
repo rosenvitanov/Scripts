@@ -59,6 +59,8 @@ echo ""
 
 echo "Next to download is:"
 RAWHTML=$(wget -qO- $LinkToPost)
+DownloadLink=$(echo $RAWHTML | egrep -o "http:\/\/www.mediafire.com\\S+\"" | rev | cut -c 2- | rev)
+echo $DownloadLink
 LinkToNextToDownload=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
 echo $LinkToNextToDownload
 
