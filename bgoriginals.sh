@@ -6,6 +6,8 @@
 ##--------------------------------------------------------------------------------------------------------
 BASEDIR="./BulgarianOriginals"
 LinkToPost=""
+RAWHTML=""
+
 
 ## This script starts here
 ## Draw a greeting message
@@ -54,5 +56,11 @@ LinkToPost="$LinkToPost?m=1"
 echo $LinkToPost
 echo ""
 
+echo "Get the webpage and extract links"
+RAWHTML=$(wget -qO- $LinkToPost)
+RESULT=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
+echo $RESULT
+
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
+
