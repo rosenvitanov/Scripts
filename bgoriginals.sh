@@ -6,6 +6,7 @@
 ##--------------------------------------------------------------------------------------------------------
 BASEDIR="./BulgarianOriginals"
 LinkToPost=""
+LinkToNextToDownload=""
 RAWHTML=""
 
 
@@ -56,10 +57,10 @@ LinkToPost="$LinkToPost?m=1"
 echo $LinkToPost
 echo ""
 
-echo "Get the webpage and extract links"
+echo "Next to download is:"
 RAWHTML=$(wget -qO- $LinkToPost)
-RESULT=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
-echo $RESULT
+LinkToNextToDownload=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
+echo $LinkToNextToDownload
 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
