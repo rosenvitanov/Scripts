@@ -26,10 +26,15 @@ if [ ! -d "$BASEDIR" ]; then
 fi
 
 ## Process the entry point
-LinkToPost=$1
+if [ -z $1 ]
+then
+	LinkToPost=$(cat ./$BASEDIR/last_saved.info)
+else
+	LinkToPost=$1
+fi
+
 if [ -z $LinkToPost ] 
 then
-
 	echo "No entry point. Exiting"
 	exit
 fi
@@ -49,4 +54,5 @@ LinkToPost="$LinkToPost?m=1"
 echo $LinkToPost
 echo ""
 
-
+echo "Saving the latest sucessfully downloaded album"
+echo $LinkToPost > "./$BASEDIR/last_saved.info"
