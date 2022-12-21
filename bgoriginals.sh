@@ -59,10 +59,15 @@ echo ""
 
 echo "Next to download is:"
 RAWHTML=$(wget -qO- $LinkToPost)
+###TODO: Check if RAWHTML is empty
+
 DownloadLink=$(echo $RAWHTML | egrep -o "http:\/\/www.mediafire.com\\S+\"" | rev | cut -c 2- | rev)
 echo $DownloadLink
+###TODO: Check if downloadLink is empty
+
 LinkToNextToDownload=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
 echo $LinkToNextToDownload
+###TODO: Check if LinkToNext is empty
 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
