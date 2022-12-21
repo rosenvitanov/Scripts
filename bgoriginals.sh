@@ -1,0 +1,52 @@
+#! /bin/bash
+
+## This script downloads everything: from http://bulgarianoriginals70s-80s.blogspot.com
+## Save description from website in a readme file
+
+##--------------------------------------------------------------------------------------------------------
+BASEDIR="./BulgarianOriginals"
+LinkToPost=""
+
+## This script starts here
+## Draw a greeting message
+clear
+echo "Bulgarian originals download script"
+echo "http://bulgarianoriginals70s-80s.blogspot.com"
+echo "This script tries to make an archive of this website automatically"
+echo "It needs an entry point and continues from that point. Download is from the oldest to the newest"
+echo "------------------------------------------------------------------------------------------------"
+echo ""
+
+##-------------------------------------------------------------------------------------------------------
+if [ ! -d "$BASEDIR" ]; then  
+  echo "No base directory found. Making a new directory"
+
+  mkdir $BASEDIR
+
+fi
+
+## Process the entry point
+LinkToPost=$1
+if [ -z $LinkToPost ] 
+then
+
+	echo "No entry point. Exiting"
+	exit
+fi
+echo "Entry point is:"
+echo $LinkToPost
+echo ""
+
+echo "Real link:"
+LinkToPost=$(echo $LinkToPost | egrep -o 'http:\/\/bulgarianoriginals70s-80s.blogspot.com\/\S+.html' | head -n1)
+if [ -z $LinkToPost ] 
+then
+
+	echo "Not a valid entry point. Exiting"
+	exit
+fi
+LinkToPost="$LinkToPost?m=1"
+echo $LinkToPost
+echo ""
+
+
