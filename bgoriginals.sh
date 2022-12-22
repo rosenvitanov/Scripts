@@ -59,6 +59,7 @@ echo $LinkToPost
 echo ""
 
 ## Get the page itself as HTML to parse the links
+echo " - Retrieving post page ..."
 RAWHTML=$(wget -qO- $LinkToPost)
 if [ -z "$RAWHTML" ]
 then
@@ -87,7 +88,9 @@ then
 fi
 echo ""
 
+
 ## Dump human readable webpage to file
+echo " - Retrieving readme ... "
 lynx -dump -justify -hiddenlinks=ignore -notitle -nomargins -trim_input_fields  $LinkToPost > ./readme
 #Remove all empty lines (including lines with whitespaces only
 sed -i '/^$/d' ./readme
@@ -101,8 +104,24 @@ sed -i '/^#/d' ./readme
 
 #Extract the date of the publicated album into array
 ALBUMDATE=($(sed -n 1p ./readme))
-mkdir ./$BASEDIR/${ALBUMDATE[3]}
-mkdir ./$BASEDIR/${ALBUMDATE[3]}/${ALBUMDATE[2]}
+mkdir -p ./$BASEDIR/${ALBUMDATE[3]}/${ALBUMDATE[2]}
+
+#Retrieve the mediafire webpage 
+echo " - Retrieving mediafire page"
+RAWHTMLMEDIAFIRE=$(wget -qO- $MediafireLink)
+if [ -z "$RAWHTMLMEDIAFIRE" ]
+then
+	echo "Unable to retrieve Mediafire page. Exiting"
+	exit
+fi
+#Extract actual link to the file from Mediafire's servers'
+LinkToRealFile=$(echo $RAWHTMLMEDIAFIRE | egrep -o "Download file\" \S+.rar" | cut -c 22-)
+echo "Link to file is:"
+echo $LinkToRealFile
+echo ""
+
+echo " - Retrieveing the file itself ..."
+wget -O tmp.rar --limit-rate=100k $LinkToRealFile
 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
