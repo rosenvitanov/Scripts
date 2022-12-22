@@ -3,7 +3,7 @@
 ## This script downloads everything: from http://bulgarianoriginals70s-80s.blogspot.com
 ## Save description from website in a readme file
 ## Software needed:
-## sudo apt-get install -y wget grep 
+## sudo apt-get install -y wget grep unrar cut lynx sed 
 ##--------------------------------------------------------------------------------------------------------
 BASEDIR="BulgarianOriginals"
 LinkToPost=""
@@ -121,8 +121,8 @@ echo $LinkToRealFile
 echo ""
 
 echo " - Retrieveing the file itself ..."
-wget -O tmp.rar --limit-rate=100k $LinkToRealFile
-
+#wget -O tmp.rar --limit-rate=300k $LinkToRealFile
+urar 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
 
