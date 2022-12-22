@@ -5,7 +5,7 @@
 ## Software needed:
 ## sudo apt-get install -y wget grep 
 ##--------------------------------------------------------------------------------------------------------
-BASEDIR="./BulgarianOriginals"
+BASEDIR="BulgarianOriginals"
 LinkToPost=""
 LinkToNextToDownload=""
 RAWHTML=""
@@ -98,6 +98,11 @@ sed -i -E '/^References$/,$d' ./readme
 #remove all lines starting with []
 sed -i '/^\[/d' ./readme
 sed -i '/^#/d' ./readme
+
+#Extract the date of the publicated album into array
+ALBUMDATE=($(sed -n 1p ./readme))
+mkdir ./$BASEDIR/${ALBUMDATE[3]}
+mkdir ./$BASEDIR/${ALBUMDATE[3]}/${ALBUMDATE[2]}
 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
