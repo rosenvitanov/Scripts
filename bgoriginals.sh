@@ -2,7 +2,8 @@
 
 ## This script downloads everything: from http://bulgarianoriginals70s-80s.blogspot.com
 ## Save description from website in a readme file
-
+## Software needed:
+## sudo apt-get install -y wget grep 
 ##--------------------------------------------------------------------------------------------------------
 BASEDIR="./BulgarianOriginals"
 LinkToPost=""
@@ -28,7 +29,7 @@ if [ ! -d "$BASEDIR" ]; then
 
 fi
 
-## Process the entry point
+## Process the entry point. If no entry point (link) as an argument - try to load it from a save file.
 if [ -z $1 ]
 then
 	LinkToPost=$(cat ./$BASEDIR/last_saved.info)
@@ -57,17 +58,46 @@ LinkToPost="$LinkToPost?m=1"
 echo $LinkToPost
 echo ""
 
-echo "Next to download is:"
+## Get the page itself as HTML to parse the links
 RAWHTML=$(wget -qO- $LinkToPost)
-###TODO: Check if RAWHTML is empty
+if [ -z "$RAWHTML" ]
+then
+	echo "Unable to retrieve page. Exiting"
+	exit
+fi
 
-DownloadLink=$(echo $RAWHTML | egrep -o "http:\/\/www.mediafire.com\\S+\"" | rev | cut -c 2- | rev)
-echo $DownloadLink
-###TODO: Check if downloadLink is empty
+## Get the Mediafire download link
+echo "Mediafire link is:"
+MediafireLink=$(echo $RAWHTML | egrep -o "http:\/\/www.mediafire.com\\S+\"" | rev | cut -c 2- | rev)
+echo $MediafireLink
+if [ -z "$MediafireLink" ] 
+then
+	echo "Unable to retrieve mediafire link. Exiting"
+	exit
+fi
+echo ""
 
+echo "Next to download is:"
 LinkToNextToDownload=$(echo $RAWHTML | egrep -o "<a class='blog-pager-newer-link' href='http:\/\/bulgarianoriginals70s-80s.blogspot.com\S+.html" | cut -c 40-)
 echo $LinkToNextToDownload
-###TODO: Check if LinkToNext is empty
+if [ -z $LinkToNextToDownload ] 
+then
+	echo "Unable to next page. Exiting"
+	exit
+fi
+echo ""
+
+## Dump human readable webpage to file
+lynx -dump -justify -hiddenlinks=ignore -notitle -nomargins -trim_input_fields  $LinkToPost > ./readme
+#Remove all empty lines (including lines with whitespaces only
+sed -i '/^$/d' ./readme
+#Remove trailing and heading whitespaces
+sed -i 's/^[ \t]*//;s/[ \t]*$//' ./readme
+#Remove everything after "References""
+sed -i -E '/^References$/,$d' ./readme
+#remove all lines starting with []
+sed -i '/^\[/d' ./readme
+sed -i '/^#/d' ./readme
 
 echo "Saving the latest sucessfully downloaded album"
 echo $LinkToPost > "./$BASEDIR/last_saved.info"
