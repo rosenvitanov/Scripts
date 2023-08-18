@@ -5,6 +5,9 @@
 ## Software needed:
 ## sudo apt-get install -y wget grep unrar cut lynx sed 
 ##--------------------------------------------------------------------------------------------------------
+## TODOs:
+##   1. Handle multiple archives - some albums consist of two archives. This albums are not handled yet.
+##--------------------------------------------------------------------------------------------------------
 BASEDIR="BulgarianOriginals"
 LinkToPost=""
 LinkToNextToDownload=""
